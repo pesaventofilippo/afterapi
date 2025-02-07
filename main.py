@@ -19,9 +19,11 @@ async def get_categories():
 
 
 @app.get("/categories/{category_id}")
-async def get_category(category_id: str):
+async def get_category(category_id: int):
     with db_session:
-        return [ch.json_info for ch in Channel.select(lambda c: c.category.id == category_id)]
+        if category := Category.get(id=category_id):
+            return category.json_full
+    return {}
 
 
 @app.get("/channels")
