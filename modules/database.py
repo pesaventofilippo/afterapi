@@ -6,6 +6,7 @@ db = Database("sqlite", "../afterapi.db", create_db=True)
 class Channel(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+    type = Required(str, default="hls")
     manifest = Required(str)
     stream_id = Required(str)
     stream_key = Required(str)
@@ -27,6 +28,7 @@ class Channel(db.Entity):
         return {
             "id": self.id,
             "name": self.name,
+            "type": self.type,
             "manifest": self.manifest,
             "stream_id": self.stream_id,
             "stream_key": self.stream_key,
