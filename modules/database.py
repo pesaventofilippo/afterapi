@@ -37,6 +37,7 @@ class Channel(db.Entity):
 class Category(db.Entity):
     id = PrimaryKey(str)
     name = Required(str)
+    color = Required(str, default="#FFFFFF")
     channels = Set(Channel)
 
     def __str__(self):
@@ -46,7 +47,8 @@ class Category(db.Entity):
     def json_info(self):
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "color": self.color
         }
 
 
