@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pony.orm import db_session
 from modules import settings
-from modules.database import Channel
+from modules.database import Channel, Category
 
 app = FastAPI()
 
@@ -12,18 +12,30 @@ async def add_cors_header(request, call_next):
     return response
 
 
+@app.get("/categories")
+async def get_categories():
+    with db_session:
+        return [cat.json_info for cat in Category.select()]
+
+
+@app.get("/categories/{category_id}")
+async def get_category(category_id: str):
+    with db_session:
+        return [ch.json_info for ch in Channel.select(lambda c: c.category.id == category_id)]
+
+
 @app.get("/channels")
 async def get_channels():
     with db_session:
-        return [c.to_dict() for c in Channel.select()]
+        return [ch.json_info for ch in Channel.select()]
 
 
 @app.get("/channels/{channel_id}")
 async def get_channel(channel_id: int):
     with db_session:
         if channel := Channel.get(id=channel_id):
-            return channel.to_dict()
-    return {"error": "Channel not found"}
+            return channel.json_full
+    return {}
 
 
 if __name__ == '__main__':

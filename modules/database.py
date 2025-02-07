@@ -1,4 +1,4 @@
-from pony.orm import Database, PrimaryKey, Required
+from pony.orm import Database, PrimaryKey, Required, Set
 
 db = Database("sqlite", "../afterapi.db", create_db=True)
 
@@ -9,19 +9,45 @@ class Channel(db.Entity):
     manifest = Required(str)
     stream_id = Required(str)
     stream_key = Required(str)
+    category = Required("Category")
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def json_info(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "category": self.category.id
+        }
+
+    @property
+    def json_full(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "manifest": self.manifest,
+            "stream_id": self.stream_id,
+            "stream_key": self.stream_key,
+            "category": self.category.id
+        }
+
+
+class Category(db.Entity):
+    id = PrimaryKey(str)
+    name = Required(str)
+    channels = Set(Channel)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def json_info(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
 
 db.generate_mapping(create_tables=True)
-
-
-if __name__ == '__main__':
-    from sys import argv
-    from pony.orm import db_session
-
-    if len(argv) != 5:
-        print(f"Usage: python3 {argv[0]} <name> <manifest> <stream_id> <stream_key>")
-        exit(1)
-
-    with db_session:
-        Channel(name=argv[1], manifest=argv[2], stream_id=argv[3], stream_key=argv[4])
-        print(f"Added {argv[1]}")
