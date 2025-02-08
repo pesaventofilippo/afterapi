@@ -1,15 +1,17 @@
 from fastapi import FastAPI
 from pony.orm import db_session
+from fastapi.middleware.cors import CORSMiddleware
 from modules import settings
 from modules.database import Channel, Category
 
 app = FastAPI()
-
-@app.middleware("http")
-async def add_cors_header(request, call_next):
-    response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 @app.get("/categories")
