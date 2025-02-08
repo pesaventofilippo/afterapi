@@ -59,7 +59,7 @@ class Category(db.Entity):
             "id": self.id,
             "name": self.name,
             "color": self.color,
-            "channels": [ch.json_info for ch in self.channels]
+            "channels": [ch.json_info for ch in self.channels.order_by(Channel.id)]
         }
 
 

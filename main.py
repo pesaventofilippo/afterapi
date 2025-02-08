@@ -17,7 +17,7 @@ app.add_middleware(
 @app.get("/categories")
 async def get_categories():
     with db_session:
-        return [cat.json_info for cat in Category.select()]
+        return [cat.json_info for cat in Category.select().order_by(Category.id)]
 
 
 @app.get("/categories/{category_id}")
@@ -31,7 +31,7 @@ async def get_category(category_id: int):
 @app.get("/channels")
 async def get_channels():
     with db_session:
-        return [ch.json_info for ch in Channel.select()]
+        return [ch.json_info for ch in Channel.select().order_by(Channel.id)]
 
 
 @app.get("/channels/{channel_id}")
