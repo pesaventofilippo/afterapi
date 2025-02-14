@@ -1,4 +1,4 @@
-from pony.orm import Database, PrimaryKey, Required, Set
+from pony.orm import Database, PrimaryKey, Required, Optional, Set
 
 db = Database("sqlite", "../afterapi.db", create_db=True)
 
@@ -6,10 +6,10 @@ db = Database("sqlite", "../afterapi.db", create_db=True)
 class Channel(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
-    type = Required(str, default="hls")
+    type = Required(str, default="m3u")
     manifest = Required(str)
-    stream_id = Required(str)
-    stream_key = Required(str)
+    stream_id = Optional(str)
+    stream_key = Optional(str)
     category = Required("Category")
 
     def __str__(self):

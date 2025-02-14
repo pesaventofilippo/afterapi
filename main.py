@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pony.orm import db_session
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from modules import settings
 from modules.database import Channel, Category
@@ -9,7 +10,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "OPTIONS"],
     allow_headers=["*"]
 )
 
